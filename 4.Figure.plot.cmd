@@ -177,3 +177,55 @@ ggbarplot(SigEnrichItem, x="Term", y="logP", ylab = "-log10(PValue)", fill = "Ca
           rotate = TRUE
           )
 dev.off()
+
+## Figure 7B. Motif Logo plot ======================================
+MF.CATC <- read.table("eCLIP/111519_YC_4CLIP/yeo.lab.out/111519_YC_4CLIP.motifAnalysis.CATC.txt", header=T)
+colnames(MF.CATC) = c("A", "C", "G", "U")
+CATC_motif <- new("pcm", mat = as.matrix(t(MF.CATC)), name="CAUC")
+pdf("111519_YC_4CLIP.motifAnalysis.CATC.pdf", width=6, height=4)
+plot(CATC_motif)
+dev.off()
+
+MF.TTACCATC <- read.table("eCLIP/111519_YC_4CLIP/yeo.lab.out/111519_YC_4CLIP.motifAnalysis.TTACCATC.txt", header=T)
+colnames(MF.TTACCATC) = c("A", "C", "G", "U")
+TTACCATC_motif <- new("pcm", mat = as.matrix(t(MF.TTACCATC)), name="UUACCAUC")
+pdf("111519_YC_4CLIP.motifAnalysis.TTACCATC.pdf", width=6, height=4)
+plot(TTACCATC_motif)
+dev.off()
+
+## Figure 7D. signal track plot ======================================
+UCSC
+
+## Figure S1C & S1D. Gini index ======================================
+gi = rep(0,dim(InputData_counts)[2])
+for (i in 1:dim(InputData_counts)[2]) {
+  gi[i] = gini(log2(InputData_counts[,i] + 1))
+}
+pdf(paste(OutputPrefix, "_Gini.pdf", sep = ""), width=11, height=8.5)
+par(mar=c(7,6,2,2)+0.1,mgp=c(5,1,0))
+barplot(gi, names.arg = colnames(InputData_counts), ylab = "Gini Index", col='steelblue', las=2)
+dev.off()
+
+## Figure S1E & S1F. Screen Compare (QC LFC boxplot for control & lncRNAs) ======================================
+#U251_180529_D21_D0.sgrna_summary
+OutputPrefix = "U251"
+sgRNA.level.data = U251_180529_D21_D0.sgrna_summary
+sgRNA.level.data$positive = ifelse(startsWith(sgRNA.level.data$sgrna, "POS"), "POS_CTRL", ifelse(startsWith(sgRNA.level.data$sgrna, "NEG"), "NEG_CTRL", "lncRNAs"))
+table(sgRNA.level.data$positive)
+
+LFC.box1 <- ggboxplot(sgRNA.level.data,
+                      x = "positive",
+                      y = c("LFC"),
+                      ylim = c(-7.5, 5),
+                      xlab = OutputPrefix,
+                      ylab = "log2(Fold Change)",
+                      order = c("lncRNAs", "NEG_CTRL", "POS_CTRL"),
+                      color = "positive", palette = rainbow(length(unique(sgRNA.level.data$positive))),
+                      add = "median_iqr") +
+  theme(legend.position = "none")
+#U87_180529_D21_D0.sgrna_summary
+LFC.box2
+
+pdf("3.U251.U87.lncRNA.CRISPRi.Screen.LFC.compare.pdf", width=7.5, height=5)
+grid.arrange(LFC.box1, LFC.box2, ncol=2)
+dev.off()

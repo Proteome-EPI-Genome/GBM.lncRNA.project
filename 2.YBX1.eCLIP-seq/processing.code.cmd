@@ -10,6 +10,7 @@ starIdxGenome="ENCODE/GRCh38_no_alt_analysis_set_GCA_000001405.15/"
 clipperSpecies="GRCh38"
 #####################################################################################################################################################################################
 
+# Based on "YeoLab/eCLIP" (https://github.com/YeoLab/eCLIP/releases/tag/v0.7.1)
 function="YeoLab.pipeline/script/"
 cd "$dir"
 

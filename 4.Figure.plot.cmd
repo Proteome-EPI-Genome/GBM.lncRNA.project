@@ -424,8 +424,6 @@ df <- data.frame(
 )
 df = df[-which(is.na(df$TumorType)) ,]
 
-library(ggpubr)
-
 pdf(paste("GBM.LGG.infiltration.", methodType, ".BoxPlot.pdf", sep = ""), width=11, height=8.5)
 ggboxplot(df, "CellType", "infiltration", color = "TumorType",
           palette = c("#00AFBB", "#E7B800")) + 
